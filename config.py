@@ -1,0 +1,3 @@
+POLICIES_BASE_URL = "/policies/"
+SEARCH_URL = POLICIES_BASE_URL + "search/{name}"
+FILTER_URL = POLICIES_BASE_URL + "filter/"
