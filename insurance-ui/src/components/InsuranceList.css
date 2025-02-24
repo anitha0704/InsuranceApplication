@@ -1,0 +1,31 @@
+.container {
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .search-box, .filter-box {
+    margin: 10px;
+  }
+  
+  input, select, button {
+    margin: 5px;
+    padding: 8px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
