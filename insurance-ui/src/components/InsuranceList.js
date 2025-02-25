@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./InsuranceList.css";
 
-const API_URL = "http://localhost:8000";
+const API_BASE_URL = "insurancepolicymanagement-api-production.up.railway.app";
 
 const InsuranceList = () => {
   const [policies, setPolicies] = useState([]);
@@ -18,7 +18,7 @@ const InsuranceList = () => {
   const fetchPolicies = async () => {
     try {
       setError({ message: "", status: null });
-      const response = await axios.get(`${API_URL}/policies/`);
+      const response = await axios.get(`${API_BASE_URL}/policies/`);
       setPolicies(response.data.response);
     } catch (error) {
       setError({
@@ -36,7 +36,7 @@ const InsuranceList = () => {
 
     try {
       setError({ message: "", status: null });
-      const response = await axios.get(`${API_URL}/policies/search/${encodeURIComponent(search)}`);
+      const response = await axios.get(`${API_BASE_URL}/policies/search/${encodeURIComponent(search)}`);
       setPolicies(response.data.response);
     } catch (error) {
       setError({
@@ -57,7 +57,7 @@ const InsuranceList = () => {
       });
 
       const queryParams = new URLSearchParams(processedFilters).toString();
-      const response = await axios.get(`${API_URL}/policies/filter/?${queryParams}`);
+      const response = await axios.get(`${API_BASE_URL}/policies/filter/?${queryParams}`);
       console.log("response filters:", response)
       setPolicies(response.data.response);
     } catch (error) {

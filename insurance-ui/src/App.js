@@ -6,7 +6,6 @@ function App() {
   const [activePage, setActivePage] = useState("home");
   return (
     <div className="app-container">
-      {/* Sidebar Navigation */}
       <aside className="sidebar">
         <h2>Navigation</h2>
         <ul>
@@ -17,7 +16,6 @@ function App() {
         </ul>
       </aside>
 
-      {/* Main Content */}
       <div className="main-content">
         {activePage === "home" ? (
           <div className="welcome-message">
