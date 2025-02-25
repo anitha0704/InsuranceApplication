@@ -1,10 +1,10 @@
 from typing import Optional, List
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from dao.insurance_policy_dao import InsurancePolicyDAO
 from fastapi.middleware.cors import CORSMiddleware
 from config import POLICIES_BASE_URL, SEARCH_URL, FILTER_URL
 
-class InsurancePolicyAPI:
+class InsurancePolicyAPIService:
     def __init__(self):
         self.app = FastAPI()
         self.dao = InsurancePolicyDAO()
@@ -26,14 +26,25 @@ class InsurancePolicyAPI:
         self.app.get(FILTER_URL)(self.filter_policies)
 
     def get_all_insurance_policies(self):
-        result = self.dao.get_all_policy()
-        print("all_policies", result)
-        return {"response": result}
+        try:
+            result = self.dao.get_all_policy()
+            if not result:
+                raise HTTPException(status_code=404, detail="No policies found")
+            return {"response": result}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error fetching policies: {str(e)}")
 
     def get_policies_by_name(self, name: str):
-        result = self.dao.get_policy_by_name(name)
-        print("policies_by_name", result)
-        return {"response": result}
+        try:
+            if not name.strip():
+                raise HTTPException(status_code=400, detail="Policy name cannot be empty")
+            result = self.dao.get_policy_by_name(name)
+            if not result:
+                raise HTTPException(status_code=404, detail=f"No policies found for name: {name}")
+            return {"response": result}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error searching policies: {str(e)}")
+
 
     def filter_policies(
         self,
@@ -41,11 +52,19 @@ class InsurancePolicyAPI:
         min_premium: Optional[float] = Query(None, description="Minimum premium"),
         max_premium: Optional[float] = Query(None, description="Maximum premium"),
         min_coverage: Optional[float] = Query(None, description="Minimum coverage amount"),
-        sort_by_premium: Optional[str] = Query(None, description="Sort by premium (asc/desc)"),
         limit: int = Query(10, description="Number of results per page"),
         offset: int = Query(0, description="Starting index for pagination")
     ):
-        result = self.dao.get_filtered_policies(
-            policy_type, min_premium, max_premium, min_coverage, sort_by_premium, limit, offset
-        )
-        return {"response": result, "limit": limit, "offset": offset}
+        try:
+            if min_premium and max_premium and min_premium > max_premium:
+                raise HTTPException(status_code=400, detail="min_premium cannot be greater than max_premium")
+
+            result = self.dao.get_filtered_policies(
+                policy_type, min_premium, max_premium, min_coverage, limit, offset
+            )
+            if not result:
+                raise HTTPException(status_code=404, detail="No policies match the given filters")
+
+            return {"response": result, "limit": limit, "offset": offset}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error filtering policies: {str(e)}")

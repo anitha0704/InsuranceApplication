@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./InsuranceList.css"; // Import CSS for styling
+import "./InsuranceList.css";
 
-const API_URL = "http://localhost:8000";  // Ensure this matches FastAPI backend
+const API_URL = "http://localhost:8000";
 
 const InsuranceList = () => {
   const [policies, setPolicies] = useState([]);
@@ -13,9 +13,6 @@ const InsuranceList = () => {
     max_premium: "",
     min_coverage: "",
   });
-
-  // useEffect(() => {
-  // }, [policies]);
 
   const fetchPolicies = async () => {
     try {
@@ -34,7 +31,6 @@ const InsuranceList = () => {
 
     try {
       const response = await axios.get(`${API_URL}/policies/search/${encodeURIComponent(search)}`);
-      console.log("response name", response.data)
       setPolicies(response.data.response);
     } catch (error) {
       console.error("Error searching policies:", error);
@@ -44,8 +40,6 @@ const InsuranceList = () => {
   const handleFilter = async () => {
     try {
       const processedFilters = {};
-
-      // Convert empty fields to null (FastAPI treats null as None)
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== "" && value !== null) {
           processedFilters[key] = value;
@@ -53,13 +47,7 @@ const InsuranceList = () => {
       });
 
       const queryParams = new URLSearchParams(processedFilters).toString();
-      console.log("queryParams:", queryParams);
-
       const response = await axios.get(`${API_URL}/policies/filter/?${queryParams}`);
-      console.log("response:", response.data);
-
-      // setPolicies(response.data.response);
-      // Ensure response is an array
       setPolicies(response.data.response);
     } catch (error) {
       console.error("Error filtering policies:", error);
@@ -102,6 +90,11 @@ const InsuranceList = () => {
           placeholder="Max Premium"
           onChange={(e) => setFilters({ ...filters, max_premium: e.target.value })}
         />
+        <input
+          type="number"
+          placeholder="Minimum Coverage"
+          onChange={(e) => setFilters({ ...filters, min_coverage: e.target.value })}
+        />
         <button onClick={handleFilter}>Apply Filters</button>
       </div>
 
@@ -131,16 +124,6 @@ const InsuranceList = () => {
             </tr>
           )}
         </tbody>
-        {/* <tbody>
-          {policies.map((policy) => (
-            <tr key={policy.id}>
-              <td>{policy.policy_name}</td>
-              <td>{policy.policy_type}</td>
-              <td>${policy.premium_amount}</td>
-              <td>${policy.coverage_amount}</td>
-            </tr>
-          ))}
-        </tbody> */}
       </table>
     </div>
   );
