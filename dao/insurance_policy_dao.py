@@ -40,9 +40,7 @@ class InsurancePolicyDAO:
         policy_types: Optional[List[str]],
         min_premium: Optional[float],
         max_premium: Optional[float],
-        min_coverage: Optional[float],
-        limit: int = 10,
-        offset: int = 0
+        min_coverage: Optional[float]
     ):
         """Filter policies based on multiple criteria"""
         query = """
@@ -69,8 +67,7 @@ class InsurancePolicyDAO:
             query += " AND coverage >= ?"
             params.append(min_coverage)
 
-        query += " ORDER BY premium ASC LIMIT ? OFFSET ?"
-        params.extend([limit, offset])
+        query += " ORDER BY premium ASC"
 
         self.cursor.execute(query, tuple(params))
         return self.construct_json_result(self.cursor.fetchall())

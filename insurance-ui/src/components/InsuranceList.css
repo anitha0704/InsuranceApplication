@@ -1,31 +1,97 @@
 .container {
-    max-width: 800px;
-    margin: auto;
-    text-align: center;
-  }
-  
-  .search-box, .filter-box {
-    margin: 10px;
-  }
-  
-  input, select, button {
-    margin: 5px;
-    padding: 8px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-  }
-  
-  th {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
+  max-width: 1000px;
+  margin: auto;
+  text-align: center;
+  font-family: Georgia, sans-serif;
+  background: #e2e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-box, .filter-box {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search-box input {
+  width: 100%;
+  max-width: 250px;
+  padding: 8px;
+  font-size: 16px;
+}
+
+
+
+.error-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  padding: 12px;
+  margin: 15px 0;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: 0.3s ease-in-out;
+}
+
+input:focus, select:focus {
+  border-color: #79ada1;
+  box-shadow: 0 0 5px rgba(140, 187, 142, 0.5);
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background: linear-gradient(135deg, #4CAF50, #388E3C);
+  color: white;
+  font-weight: bold;
+}
+
+td {
+  background: #f9f9f9;
+}
+
+tr:nth-child(even) {
+  background: #f1f1f1;
+}
+
+tr:hover {
+  background: rgba(76, 175, 80, 0.1);
+  transition: 0.3s;
+}

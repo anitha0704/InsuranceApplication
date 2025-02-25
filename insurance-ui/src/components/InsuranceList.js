@@ -7,6 +7,7 @@ const API_URL = "http://localhost:8000";
 const InsuranceList = () => {
   const [policies, setPolicies] = useState([]);
   const [search, setSearch] = useState("");
+  const [error, setError] = useState({ message: "", status: null });
   const [filters, setFilters] = useState({
     policy_type: "",
     min_premium: "",
@@ -16,10 +17,14 @@ const InsuranceList = () => {
 
   const fetchPolicies = async () => {
     try {
+      setError({ message: "", status: null });
       const response = await axios.get(`${API_URL}/policies/`);
       setPolicies(response.data.response);
     } catch (error) {
-      console.error("Error fetching policies:", error);
+      setError({
+        status: error.response?.data?.detail?.status,
+        message: error.response?.data?.detail?.message,
+      });
     }
   };
 
@@ -30,16 +35,21 @@ const InsuranceList = () => {
     }
 
     try {
+      setError({ message: "", status: null });
       const response = await axios.get(`${API_URL}/policies/search/${encodeURIComponent(search)}`);
       setPolicies(response.data.response);
     } catch (error) {
-      console.error("Error searching policies:", error);
+      setError({
+        status: error.response?.data?.detail?.status,
+        message: error.response?.data?.detail?.message || "Error filtering policies.",
+      });
     }
   };
 
   const handleFilter = async () => {
     try {
       const processedFilters = {};
+      setError({ message: "", status: null });
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== "" && value !== null) {
           processedFilters[key] = value;
@@ -48,12 +58,26 @@ const InsuranceList = () => {
 
       const queryParams = new URLSearchParams(processedFilters).toString();
       const response = await axios.get(`${API_URL}/policies/filter/?${queryParams}`);
+      console.log("response filters:", response)
       setPolicies(response.data.response);
     } catch (error) {
-      console.error("Error filtering policies:", error);
+      setError({
+        status: error.response?.data?.detail?.status,
+        message: error.response?.data?.detail?.message || "Error filtering policies.",
+      });
     }
   };
-
+  
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+  
+    if (!isNaN(value) && value.trim() !== "") {
+      alert("Invalid input: Only numbers are not allowed.");
+      return;
+    }
+  
+    setSearch(value);
+  };
 
   return (
     <div className="container">
@@ -63,9 +87,9 @@ const InsuranceList = () => {
       <div className="search-box">
         <input
           type="text"
-          placeholder="Search by name..."
+          placeholder="Search all or Search by name..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={handleSearchChange}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
@@ -78,53 +102,64 @@ const InsuranceList = () => {
           <option value="Health">Health</option>
           <option value="Vehicle">Vehicle</option>
           <option value="Term Life">Term Life</option>
+          <option value="Business">Business</option>
+          <option value="Travel">Travel</option>
         </select>
 
         <input
           type="number"
           placeholder="Min Premium"
+          step="500"
           onChange={(e) => setFilters({ ...filters, min_premium: e.target.value })}
         />
         <input
           type="number"
           placeholder="Max Premium"
+          step="500"
           onChange={(e) => setFilters({ ...filters, max_premium: e.target.value })}
         />
         <input
           type="number"
           placeholder="Minimum Coverage"
+          step="1000"
           onChange={(e) => setFilters({ ...filters, min_coverage: e.target.value })}
         />
         <button onClick={handleFilter}>Apply Filters</button>
       </div>
 
       {/* Policies Table */}
-      <table>
-        <thead>
-          <tr>
-            <th>Policy Name</th>
-            <th>Type</th>
-            <th>Premium</th>
-            <th>Coverage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {policies?.length > 0 ? (
-            policies.map((policy) => (
-              <tr key={policy.id}>
-                <td>{policy.name}</td>
-                <td>{policy.type}</td>
-                <td>${policy.premium}</td>
-                <td>${policy.coverage}</td>
-              </tr>
-            ))
-          ) : (
+      {!error.message ? (
+        <table>
+          <thead>
             <tr>
-              <td colSpan="4">No policies found.</td>
+              <th>Policy Name</th>
+              <th>Type</th>
+              <th>Premium</th>
+              <th>Coverage</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {policies?.length > 0 ? (
+              policies.map((policy) => (
+                <tr key={policy.id}>
+                  <td>{policy.name}</td>
+                  <td>{policy.type}</td>
+                  <td>Rs.{policy.premium}</td>
+                  <td>Rs.{policy.coverage}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">No policies found.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      ) : (
+        <div className="error-message">
+          <strong>Error {error.status}:</strong> {error.message}
+        </div>
+      )}
     </div>
   );
 };

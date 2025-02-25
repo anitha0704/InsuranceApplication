@@ -11,7 +11,7 @@ class DatabaseConnection:
 
     def _establish_connection(self):
         try:
-            self.conn = sqlite3.connect("database.db", check_same_thread=False)
+            self.conn = sqlite3.connect("dao/database.db", check_same_thread=False)
             self.cursor = self.conn.cursor()
         except Exception as e:
             print(f"Database Connection Error: {str(e)}")
