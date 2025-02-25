@@ -18,6 +18,7 @@ A full-stack **Insurance Policy Management** application with a **FastAPI backen
    * Uses FastAPI to create REST endpoints.
    * SQLite3 is used as a lightweight database. 
    * Provides endpoints for retrieving policies, searching, and filtering.
+   * Covers basic unit tests for backend APIs
 
 2. Frontend (React.js)
 
@@ -35,6 +36,7 @@ A full-stack **Insurance Policy Management** application with a **FastAPI backen
   * Proper messages and status codes are returned to the UI for better debugging.
 * **Flexible Filtering**: Filters are now optional, providing a smoother user experience.
 * **Enhanced UI** - user-friendliness and accessibility.
+* **Unit Tests** -  Added unittests for the backend API.
 
 ## 🛠️ Setup & Deployment Guide
 

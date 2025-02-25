@@ -1,8 +1,11 @@
 from typing import Optional, List
+
 from fastapi import FastAPI, Query, HTTPException
-from dao.insurance_policy_dao import InsurancePolicyDAO
 from fastapi.middleware.cors import CORSMiddleware
+
 from config import POLICIES_BASE_URL, SEARCH_URL, FILTER_URL
+from dao.insurance_policy_dao import InsurancePolicyDAO
+
 
 class InsurancePolicyAPIService:
     def __init__(self):
@@ -36,7 +39,8 @@ class InsurancePolicyAPIService:
             raise http_error
 
         except Exception as e:
-            raise HTTPException(status_code=500, detail={"status": 500, "message": f"Error fetching policies:: {str(e)}"})
+            raise HTTPException(status_code=500,
+                                detail={"status": 500, "message": f"Error fetching policies:: {str(e)}"})
 
     def get_all_insurance_policies(self):
         return self._fetch_policies(self.dao.get_all_policy, error_message="No Insurance Policies Found")
@@ -53,7 +57,8 @@ class InsurancePolicyAPIService:
             min_coverage: Optional[float] = Query(None, description="Minimum coverage amount")
     ):
         if min_premium and max_premium and min_premium > max_premium:
-            raise HTTPException(status_code=404, detail={"status": 404, "message": "min_premium cannot be greater than max_premium"})
+            raise HTTPException(status_code=404,
+                                detail={"status": 404, "message": "min_premium cannot be greater than max_premium"})
 
         return self._fetch_policies(
             self.dao.get_filtered_policies,

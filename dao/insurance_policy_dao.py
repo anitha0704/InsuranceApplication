@@ -1,4 +1,5 @@
 from typing import Optional, List
+
 from dao.database_connection import DatabaseConnection
 
 
@@ -36,11 +37,11 @@ class InsurancePolicyDAO:
         return self.construct_json_result(self.cursor.fetchall())
 
     def get_filtered_policies(
-        self,
-        policy_types: Optional[List[str]],
-        min_premium: Optional[float],
-        max_premium: Optional[float],
-        min_coverage: Optional[float]
+            self,
+            policy_types: Optional[List[str]],
+            min_premium: Optional[float],
+            max_premium: Optional[float],
+            min_coverage: Optional[float]
     ):
         """Filter policies based on multiple criteria"""
         query = """
