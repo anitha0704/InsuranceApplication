@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./InsuranceList.css";
 
-const API_BASE_URL = "insurancepolicymanagement-api-production.up.railway.app";
+const API_BASE_URL = "https://insurancepolicymanagement-api-production.up.railway.app";
 
 const InsuranceList = () => {
   const [policies, setPolicies] = useState([]);
